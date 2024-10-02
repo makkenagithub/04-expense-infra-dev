@@ -268,4 +268,20 @@ resource "aws_security_group_rule" "backend_app_alb" {
   security_group_id = module.backend_sg.id
 }
 
+# app-alb is accepting connections from bastion host
+resource "aws_security_group_rule" "app_alb_bastion" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.bastion_sg.id
+
+  #cidr_blocks       = ["0.0.0.0/0"]
+  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+  
+  # security group to apply this rule to
+  security_group_id = module.app_alb_sg.id
+}
+
 
