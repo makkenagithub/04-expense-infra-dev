@@ -71,3 +71,23 @@ module "db" {
     },
   ]
 }
+
+# create a CNAME record to point mysql-dev.daws81s.online to RDS DB end point url
+module "records" {
+  source  = "terraform-aws-modules/route53/aws//modules/records"
+
+  zone_name = "dwas81s.online"
+
+  records = [
+    {
+      name    = "mysql-${var.env}"  # mysql-dev.daws81s.online
+      type    = "CNAME"
+      ttl     = 1
+      allow_overwrite = true  #exisitng record can be overwrite
+      records = [
+       modue.db.db_instance_address # get the endpoint address of RDS db
+      ]
+    }
+  ]
+
+}

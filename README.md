@@ -75,3 +75,24 @@ Application Infra:
 1. EC2 instances
 2. target groups
 
+We have 3 types of LBs in AWS
+
+1. Classic LB
+2. Application LB - we are working on it
+3. Network LB
+
+host path based:
+
+backend.daws81s.online -> backend LB
+
+frontend.daws81s.online -> frontend LB
+
+Application LB - It works on layer 7 of networking
+
+Context path based:
+
+daws81s.online/backend
+
+daws81s.online/frontend
+
+

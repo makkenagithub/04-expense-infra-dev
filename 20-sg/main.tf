@@ -63,6 +63,20 @@ module "ansible_sg" {
     sg_tags = var.ansible_sg_tags
 }
 
+module "app_alb_sg" {
+    #source = "../../03-terraform-sg-module"
+    # to give source from module prepared in GITHUB
+    source = "git::https://github.com/makkenagithub/03-terraform-sg-module.git?ref=main"
+
+    project_name = var.project_name
+    env = var.env
+    sg_name = "app-alb"  # expense-dev-app-alb
+    vpc_id  = local.vpc_id
+    common_tags = var.common_tags
+    sg_tags = var.app_alb_sg_tags
+}
+
+
 # mysql allowing connection on 3306 from instances attched to backed sg
 resource "aws_security_group_rule" "mysql_backend" {
   type              = "ingress"
@@ -236,6 +250,22 @@ resource "aws_security_group_rule" "ansible_public" {
   
   # security group to apply this rule to
   security_group_id = module.ansible_sg.id
+}
+
+# backend is accepting connections from app alb
+resource "aws_security_group_rule" "backend_app_alb" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.app_alb_sg.id
+
+  #cidr_blocks       = ["0.0.0.0/0"]
+  #ipv6_cidr_blocks  = [aws_vpc.example.ipv6_cidr_block]
+  
+  # security group to apply this rule to
+  security_group_id = module.backend_sg.id
 }
 
 
