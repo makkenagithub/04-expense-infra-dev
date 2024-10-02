@@ -36,6 +36,8 @@ terraform init upgrade
 
 Load balancing and Auto scalng:
 
+We have 2 types of LBs. One is internet facing aand other is not facing internet.
+
 target group, load balancer, listener and rules, health check
 
 Target group: contains a lst of servers.
@@ -56,3 +58,20 @@ Auto Scaling:
 2. Based on CPU utilisation
 
 ![Capture](https://github.com/user-attachments/assets/ee84b798-70d6-4ef0-a664-87c8eeae13f3)
+
+1. Project infra: basement to a house -> no frequesnt changes, only rare changes
+2. Application infra: frequent changes - yes
+
+Project infra:
+
+1. VPC - not changes frequently
+2. SG - SG may not change, but rules may change frequently
+3. Bastion host - no frequent changes
+4. DB - No frequent chnages. (probably once in 2 years upgrade)
+5. LB - no changes frequently
+
+Application Infra:
+
+1. EC2 instances
+2. target groups
+
