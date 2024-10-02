@@ -38,3 +38,19 @@ Load balancing and Auto scalng:
 
 target group, load balancer, listener and rules, health check
 
+Target group: contains a lst of servers.
+
+Load balancer: container listener and rules. It checks target group servers health every (say 10 secs) time , based on the time we set.
+
+The LB flow is like below:
+
+First request comes to LB listener -> port 80 (nginx) -> nginx -> port 80 -> 2 target insances -> LB will check instances helath -> sends the request to health server. (if all target servers are healthy , then select a server randomly)
+
+1. first create target group
+2. launch servers and add to target group
+3. create LB, listener and rules.
+
+Auto Scaling:
+
+1. Launch template (options to create servers) -> plac them inside target group
+2. Based on CPU utilisation
