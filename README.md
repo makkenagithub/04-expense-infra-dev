@@ -34,3 +34,7 @@ When a terraform module is changed, then we need to give init upgrade command to
 
 terraform init upgrade
 
+Load balancing and Auto scalng:
+
+target group, load balancer, listener and rules, health check
+
