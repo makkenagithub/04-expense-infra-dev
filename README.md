@@ -96,3 +96,18 @@ daws81s.online/backend
 daws81s.online/frontend
 
 
+
+Application LB: (backend applications)
+
+app-dev.dwas81s.online
+
+Web ALP: (front end)
+
+web-dev.daws81s.online
+
+If we give
+
+app-dev.dwas81s.online - it will repsond -> default resonse
+
+backend.app-dev.dwas81s.online -> forward this request to backend target group
+
