@@ -54,3 +54,5 @@ Auto Scaling:
 
 1. Launch template (options to create servers) -> plac them inside target group
 2. Based on CPU utilisation
+
+![Capture](https://github.com/user-attachments/assets/ee84b798-70d6-4ef0-a664-87c8eeae13f3)
