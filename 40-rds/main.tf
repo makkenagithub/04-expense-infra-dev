@@ -14,6 +14,11 @@ module "db" {
   password = "ExpenseApp1"
   port     = "3306"
 
+# below param set to true. It will not create snapshot before deleting RDS db.
+# by default its false in the module. By default it creates final snap before deleting DB and attach to VPC.
+# if snap s attached to VPC, we cant delete VPC. Just for practice purpose , we are setting true
+  skip_final_snapshot = true
+
   #iam_database_authentication_enabled = true
 
   vpc_security_group_ids = [local.mysql_sg_id]
