@@ -296,4 +296,63 @@ resource "aws_security_group_rule" "app_alb_bastion" {
   security_group_id = module.app_alb_sg.id
 }
 
+# vpn is accepting connection from port 22 from public
+resource "aws_security_group_rule" "vpn_public" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]   # usually we give our company IP here
+  
+  # security group to apply this rule to
+  security_group_id = module.vpn_sg.id
+}
+
+# vpn is accepting connection from port 443 from public
+resource "aws_security_group_rule" "vpn_public_443" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]   # usually we give our company IP here
+  
+  # security group to apply this rule to
+  security_group_id = module.vpn_sg.id
+}
+
+# vpn is accepting connection from port 943 from public
+resource "aws_security_group_rule" "vpn_public_943" {
+  type              = "ingress"
+  from_port         = 943
+  to_port           = 943
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]   # usually we give our company IP here
+  
+  # security group to apply this rule to
+  security_group_id = module.vpn_sg.id
+}
+
+# vpn is accepting connection from port 22 from public
+resource "aws_security_group_rule" "vpn_public_1194" {
+  type              = "ingress"
+  from_port         = 1194
+  to_port           = 1194
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]   # usually we give our company IP here
+  
+  # security group to apply this rule to
+  security_group_id = module.vpn_sg.id
+}
 

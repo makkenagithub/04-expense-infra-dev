@@ -127,3 +127,5 @@ This AMI contains open VPN server is already installed and configured.
 
 Once we launch thid EC2, we need to do little configuration to make our expence project connection with VPN instead of Bastion.
 
+VPN ports are - 943, 443, 1194, 22 - 22 is for ssh access
+
