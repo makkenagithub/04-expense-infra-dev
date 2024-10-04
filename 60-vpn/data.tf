@@ -1,5 +1,5 @@
-data "aws_ssm_parameter" "bastion_sg_id" {
-    name = "/${var.project_name}/${var.env}/bastion_sg_id"
+data "aws_ssm_parameter" "vpn_sg_id" {
+    name = "/${var.project_name}/${var.env}/vpn_sg_id"
 }
 
 data "aws_ssm_parameter" "public_subnet_ids" {
@@ -8,7 +8,7 @@ data "aws_ssm_parameter" "public_subnet_ids" {
 
 data "aws_ami" "suresh" {
     most_recet = true
-    owners = ["973714476881"]
+    owners = ["679593333241"]
 
     filter {
         name = "name"

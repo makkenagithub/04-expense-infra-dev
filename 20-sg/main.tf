@@ -384,7 +384,7 @@ resource "aws_security_group_rule" "backend_vpn" {
 }
 
 # backend is accepting connections from vpn on port 8080
-resource "aws_security_group_rule" "backend_vpn" {
+resource "aws_security_group_rule" "backend_vpn_8080" {
   type              = "ingress"
   from_port         = 8080
   to_port           = 8080
