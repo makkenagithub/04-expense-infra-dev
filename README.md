@@ -101,7 +101,7 @@ Application LB: (backend applications)
 
 app-dev.dwas81s.online
 
-Web ALP: (front end)
+Web ALB: (front end)
 
 web-dev.daws81s.online
 
@@ -110,4 +110,20 @@ If we give
 app-dev.dwas81s.online - it will repsond -> default resonse
 
 backend.app-dev.dwas81s.online -> forward this request to backend target group
+
+I think PORT FOR LB is 80 (please check)
+
+VPN:
+
+user laptop -> VPN -> can access secure servers
+
+and company can monitor our traffic
+
+Dedicted team will be there for VPN in companies. Devops team no need to worry on VPN.
+
+Search for "OpenVPN Access Server Community Image-f" in EC2 launch instance. Create EC2 with that.
+
+This AMI contains open VPN server is already installed and configured.
+
+Once we launch thid EC2, we need to do little configuration to make our expence project connection with VPN instead of Bastion.
 

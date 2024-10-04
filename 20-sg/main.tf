@@ -76,6 +76,18 @@ module "app_alb_sg" {
     sg_tags = var.app_alb_sg_tags
 }
 
+module "vpn_sg" {
+    #source = "../../03-terraform-sg-module"
+    # to give source from module prepared in GITHUB
+    source = "git::https://github.com/makkenagithub/03-terraform-sg-module.git?ref=main"
+
+    project_name = var.project_name
+    env = var.env
+    sg_name = "vpn"  # expense-dev-app-alb
+    vpc_id  = local.vpc_id
+    common_tags = var.common_tags
+    sg_tags = var.vpn_sg_tags
+}
 
 # mysql allowing connection on 3306 from instances attched to backed sg
 resource "aws_security_group_rule" "mysql_backend" {
