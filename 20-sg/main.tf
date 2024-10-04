@@ -356,3 +356,42 @@ resource "aws_security_group_rule" "vpn_public_1194" {
   security_group_id = module.vpn_sg.id
 }
 
+
+# app-alb is accepting connections from vpn on port 80
+resource "aws_security_group_rule" "app_alb_vpn" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.vpn_sg.id
+  
+  # security group to apply this rule to
+  security_group_id = module.app_alb_sg.id
+}
+
+# backend is accepting connections from vpn on port 22
+resource "aws_security_group_rule" "backend_vpn" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.vpn_sg.id
+  
+  # security group to apply this rule to
+  security_group_id = module.backend_sg.id
+}
+
+# backend is accepting connections from vpn on port 8080
+resource "aws_security_group_rule" "backend_vpn" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.vpn_sg.id
+  
+  # security group to apply this rule to
+  security_group_id = module.backend_sg.id
+}
