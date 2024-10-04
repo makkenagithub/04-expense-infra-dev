@@ -129,3 +129,27 @@ Once we launch thid EC2, we need to do little configuration to make our expence 
 
 VPN ports are - 943, 443, 1194, 22 - 22 is for ssh access
 
+command to generate key pair
+```
+ssh-keygen -f openvpn
+```
+
+command to connect to the above open VPN server 
+```
+ssh -i <private key filename> openvpnas@<public IP of vpn server>
+```
+opnvpnas is a default user in opne von AMI server.
+
+Then it asks for lot of things.
+Initially give yes, and then press enter to make all values as default. In between it asks for user name password. Give a user name (openvpn) and a password of min 8 chars and remember it.
+
+Finally it provides admin UI url and client UI url.
+
+Open admin url and giver the user name and password. Then change some vpn settings.
+
+Install open vpn connect. Open it and give client url there
+Here also give the username and password as above. Then click import.
+
+
+
+
