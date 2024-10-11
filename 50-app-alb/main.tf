@@ -9,6 +9,7 @@ module "app_alb" {
 
   security_groups = [local.app_alb_sg_id]
   create_security_group = false
+  enable_delete_protection = false
 
 
   tags = merge(
