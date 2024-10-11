@@ -77,3 +77,30 @@ resource "aws_ec2_instance_state" "backend_ec2" {
 
 }
 
+
+# create AMI from existing ec2 insatnce
+resource "aws_ami_from_instance" "backend" {
+  name               = local.resource_name
+  source_instance_id = module.backend_ec2.id
+
+  depends_on = [aws_ec2_instance_state.backend_ec2]
+
+}
+
+
+resource "null_resource" "backend_ec2_delete" {
+
+  triggers = {
+    instance_id = module.backend_ec2.id
+  }
+
+
+  provisioner "local-exec" {
+    # execute below aws cli command to terminate instance
+    command = "aws ec2 terminate-instances --instance-ids ${modile.backend_ec2.id}"
+
+  }
+
+    depends_on = [aws_ami_from_instance.backend]
+
+}
