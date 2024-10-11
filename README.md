@@ -138,7 +138,7 @@ command to connect to the above open VPN server
 ```
 ssh -i <private key filename> openvpnas@<public IP of vpn server>
 ```
-opnvpnas is a default user in opne von AMI server.
+openvpnas is a default user in open vpn AMI server.
 
 Then it asks for lot of things.
 Initially give yes, and then press enter to make all values as default. In between it asks for user name password. Give a user name (openvpn) and a password of min 8 chars and remember it.
@@ -154,6 +154,32 @@ Here also give the username and password as above. Then click import.
 
 ![Capture](https://github.com/user-attachments/assets/6adb5818-978e-4773-944f-6b7ba5e3d19a)
 
+
+
+New Deployments:
+
+If there is a new version, stop the server, remove old code, download new code and restart the server.
+
+or
+
+Create ec2, configure using ansible, stop instance, take AMI (launch template), launch it using auto scaling. 
+
+When traffic increases , use AMI to add servers.
+
+If there is traffic increase - create new ec2, configure with backend.
+
+
+Its not good to take AMI when the instance is running, because we may get lot of descripencies. At the time  of taking AMI, if some using in the background using the server and may create/update/delete data. Hence it always better to take the AMI after stopping the instance.
+
+1. Create ec2
+2. configure it using ansible
+3. stop server
+4. take AMI -> with new version
+5. delete ec2 instance of step 1
+6. create launch templetae (it contains ami, network ,sg etc)
+7. create target group
+8. create ASG using launch template and place it in target group
+9. then create rule in load balancer.
 
 
 
