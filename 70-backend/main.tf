@@ -29,7 +29,7 @@ module "backend_ec2" {
 }
 
 # null resource does not create any resource, it is used to connect to ec2 through provisioners.
-
+# terraform taint null_resource.backend
 resource "null_resource" "backend" {
   # 
   # this null resource triggers as when the instance id of the ec2 is changes, that means
@@ -66,7 +66,14 @@ resource "null_resource" "backend" {
   }
 
 
+}
 
+# below resource is depends on null_resource. It runs only after  null_resource runs.
+resource "aws_ec2_instance_state" "backend_ec2" {
+  instance_id = module.backend_ec2.id
+  state       = "stopped"
+  
+  depends_on = [null_resource.backend]
 
 }
 

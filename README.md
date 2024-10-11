@@ -189,3 +189,15 @@ Ansible push: If we want to install packages in a node, then install ansible in 
 Null Resource and Trigger:
 
 Null resource - It wont do anything, means it wont create any resource. But useful for provisioners
+
+Provisioners will run only when the resource is created. If we want to run tthe provisoners, then the resource need to be recreated. So we can use taint command to force recreate the resource.
+
+```
+terraform taint null_resource.backend
+```
+So the resource is tainted. Then run terraform plan and apply, It creates the resource again.
+
+
+Terraform creates the resources paralely which do not have dependency. To make some resource to create after a resource is created, then we have to depends on block in the resource.
+
+
