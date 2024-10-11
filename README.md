@@ -181,5 +181,11 @@ Its not good to take AMI when the instance is running, because we may get lot of
 8. create ASG using launch template and place it in target group
 9. then create rule in load balancer.
 
+Ansible push: We have ansible server. We install packages in ansible nodes with the help of ansible server. 
+
+Ansible push: If we want to install packages in a node, then install ansible in that node, then pull ansible palybooks from git, then run palybooks locally. Its ansible pull. Ansible is light weight.
 
 
+Null Resource and Trigger:
+
+Null resource - It wont do anything, means it wont create any resource. But useful for provisioners
