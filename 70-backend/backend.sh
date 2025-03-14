@@ -6,4 +6,4 @@ echo "Component: $component , Environment: $env"
 
 dnf install ansible -y
 
-ansible-pull -i localhost, -U <git clone backend ansible url> <yaml file(backend.yaml)> -e componet=$component env=$env 
+ansible-pull -i localhost, -U <git clone backend ansible url> <yaml file(backend.yaml)> -e component=$component env=$env 

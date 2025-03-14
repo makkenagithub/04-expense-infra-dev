@@ -30,6 +30,8 @@ module "backend_ec2" {
 ##
 # null resource does not create any resource, it is used to connect to ec2 through provisioners.
 # terraform taint null_resource.backend
+# if we want the terraform to run the below resource forcebly, then we need to give above command and then try the 
+# terraform plan command
 resource "null_resource" "backend" {
   # 
   # this null resource triggers as when the instance id of the ec2 is changes, that means
@@ -88,6 +90,8 @@ resource "aws_ami_from_instance" "backend" {
 }
 
 
+# delete the ec2 insatnce. When we try to google, it shows only terraform destroy command to terminate/delete ec2
+# we can use below option to delete ec2 by executing aws command in local-exec
 resource "null_resource" "backend_ec2_delete" {
 
   triggers = {
@@ -97,7 +101,7 @@ resource "null_resource" "backend_ec2_delete" {
 
   provisioner "local-exec" {
     # execute below aws cli command to terminate instance
-    command = "aws ec2 terminate-instances --instance-ids ${modile.backend_ec2.id}"
+    command = "aws ec2 terminate-instances --instance-ids ${module.backend_ec2.id}"
 
   }
 
