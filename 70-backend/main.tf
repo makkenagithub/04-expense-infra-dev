@@ -27,7 +27,7 @@ module "backend_ec2" {
     }
   )
 }
-
+##
 # null resource does not create any resource, it is used to connect to ec2 through provisioners.
 # terraform taint null_resource.backend
 resource "null_resource" "backend" {
