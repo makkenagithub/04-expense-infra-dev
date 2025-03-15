@@ -10,6 +10,11 @@ data "aws_ssm_parameter" "vpc_id" {
     name  = "/${var.project_name}/${var.env}/vpc_id"
 }
 
+data "aws_ssm_parameter" "app_alb_listener_arn" {
+    name  = "/${var.project_name}/${var.env}/app_alb_listener_arn"
+}
+
+
 data "aws_ami" "suresh" {
     most_recet = true
     owners = ["973714476881"]

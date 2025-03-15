@@ -110,7 +110,7 @@ resource "null_resource" "backend_ec2_delete" {
 }
 
 
-# create target group for backend
+# create lb target group for backend
 resource "aws_lb_target_group" "backend_tg" {
   name     = local.resource_name
   port     = 8080
@@ -134,7 +134,7 @@ resource "aws_lb_target_group" "backend_tg" {
 }
 
 
-# create launch templete
+# create launch templete - here we give ami id, security group id
 resource "aws_launch_template" "backend_template" {
   
   name = local.resource_name
@@ -147,6 +147,7 @@ resource "aws_launch_template" "backend_template" {
   instance_type = "t2.micro"
   # subnet_id = local.private_subnet_id   #subnet_id filed does not exist in launch template
   vpc_security_group_ids = local.backend_sg_id
+
   update_default_version = true
 
   tag_specifications {
@@ -160,7 +161,7 @@ resource "aws_launch_template" "backend_template" {
 }
 
 
-# Auto scaling group (ASG))
+# Auto scaling group (ASG)) - here we give lb target group arn, launch template id, subnet ids
 resource "aws_autoscaling_group" "backend_autoscale" {
   
   name = local.resource_name
@@ -170,6 +171,8 @@ resource "aws_autoscaling_group" "backend_autoscale" {
   health_check_grace_period = 300
   health_check_type         = "ELB"
 
+  target_group_arns = [aws_lb_target_group.backend_tg.arn]
+
   #vpc zone identifier is the filed where we give the subnet IDs
   vpc_zone_identifier       = [local.private_subnet_id]
 
@@ -178,7 +181,17 @@ resource "aws_autoscaling_group" "backend_autoscale" {
     version = "$Latest"
   }
 
-  # timeout: If the instance is not health with in 15 minutes, then ASG will delete that instance
+  # Rolling update. Min health percentage is given as 50 means, out of all the instances atleast 50% of instances should be healthy
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+    # This rolling update triggers when launch_template is changed
+    triggers = ["launch_template"]
+  }
+
+  # timeout: If the instance is not healthy with in 15 minutes, then ASG will delete that instance
   timeouts {
     delete = "15m"
   }
@@ -211,5 +224,25 @@ resource "aws_autoscaling_policy" "backend" {
   }
 
   autoscaling_group_name = aws_autoscaling_group.backend_autoscale.name
+
+}
+
+# alb listener rule - here we give lb listener arn, lb target group arn
+# we can write multiple rules for a listener. A rule with low priority value is evaluated first
+resource "aws_lb_listener_rule" "backend" {
+  listener_arn = local.app_alb_listener_arn
+  priority     = 100    #low priority value rule will be evaluated first
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.backend_tg.arn
+  }
+
+  # host based routing
+  condition {
+    host_header {
+      values = ["backend.app-<domain name>"]  # eg: backend.app.daws81s.online
+    }
+  }
 
 }
