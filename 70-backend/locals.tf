@@ -5,4 +5,6 @@ locals {
 
         # conver string list to list and use first subnet ID
     private_subnet_id = split(",", data.aws_ssm_parameter.private_subnet_ids)[0]
+
+    vpc_id = data.aws_ssm_parameter.vpc_id.value
 }

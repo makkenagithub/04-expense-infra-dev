@@ -108,3 +108,108 @@ resource "null_resource" "backend_ec2_delete" {
     depends_on = [aws_ami_from_instance.backend]
 
 }
+
+
+# create target group for backend
+resource "aws_lb_target_group" "backend_tg" {
+  name     = local.resource_name
+  port     = 8080
+  protocol = "HTTP"
+  vpc_id   = local.vpc_id
+
+  # backend app teams usually provide a url, if that is working fine then backend app health is good. 
+  # we are giving that url here in health_check block
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    interval = 10
+    matcher = "200-299"
+    path = "/health"  #backend app team gives this.
+    port = 8080
+    protocol = "HTTP"
+    timeout = 6
+    
+  }
+
+}
+
+
+# create launch templete
+resource "aws_launch_template" "backend_template" {
+  
+  name = local.resource_name
+
+  # give the ami ID generated in the resource "aws_ami_from_instance" "backend" {
+  image_id = aws_ami_from_instance.backend.id
+
+  # when auto scaling showndowns the instance, we can choose the below option as terminate instance or stop the instance
+  instance_initiated_shutdown_behavior = "terminate"  
+  instance_type = "t2.micro"
+  # subnet_id = local.private_subnet_id   #subnet_id filed does not exist in launch template
+  vpc_security_group_ids = local.backend_sg_id
+  update_default_version = true
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = local.resource_name
+    }
+  }
+
+}
+
+
+# Auto scaling group (ASG))
+resource "aws_autoscaling_group" "backend_autoscale" {
+  
+  name = local.resource_name
+  desired_capacity   = 2
+  max_size           = 10
+  min_size           = 2
+  health_check_grace_period = 300
+  health_check_type         = "ELB"
+
+  #vpc zone identifier is the filed where we give the subnet IDs
+  vpc_zone_identifier       = [local.private_subnet_id]
+
+  launch_template {
+    id      = aws_launch_template.backend_template.id
+    version = "$Latest"
+  }
+
+  # timeout: If the instance is not health with in 15 minutes, then ASG will delete that instance
+  timeouts {
+    delete = "15m"
+  }
+
+  tag {
+    key                 = "Name"
+    value               = local.resource_name
+    propagate_at_launch = true
+  }
+
+
+}
+
+# we need to create auto scaling policy
+resource "aws_autoscaling_policy" "backend" {
+
+  name = local.resource_name
+
+  # policy_type - (Optional) Policy type, either "SimpleScaling", "StepScaling", 
+  #"TargetTrackingScaling", or "PredictiveScaling". If this value isn't provided, AWS will default to "SimpleScaling."
+  
+  policy_type = "TargetTrackingScaling"
+
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+
+    target_value = 70.0
+  }
+
+  autoscaling_group_name = aws_autoscaling_group.backend_autoscale.name
+
+}
