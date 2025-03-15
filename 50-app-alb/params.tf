@@ -1,5 +1,5 @@
 
-# store the arn of alb listener
+# store the arn of the aws listener
 resource "aws_ssm_parameter" "app_alb_listener_arn" {
 
   name  = "/${var.project_name}/${var.env}/app_alb_listener_arn"

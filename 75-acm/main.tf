@@ -1,13 +1,13 @@
 resource "aws_acm_certificate" "expense" {
-  domain_name       = var.zone_name         # "daws81s.online"
+  domain_name       = "*.${var.zone_name}"         # "*.daws81s.online"
   validation_method = "DNS"
 
-  tags = merge {
+  tags = merge (
     var.common_tags,
     {
         Name = local.resource_name  # expense-dev
     }
-  }
+  )
 
   lifecycle {
     create_before_destroy = true
