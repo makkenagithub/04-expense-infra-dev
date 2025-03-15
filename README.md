@@ -243,11 +243,54 @@ We need to give instances, target group name, protocol, port, health check proto
 
 Auto scaling group (ASG):
 
-Input for auto scaling involves launch template, target group arn
+Input for auto scaling group involves launch template, target group arn, subnet IDs
 
 Auto scaling policy:
 
 Input is ASG name, scaling policy type (CPU utilisation etc)
+
+create auto scaling policy with average CPU utilisation 70% as threshold.
+
+Here if the avg cpu utilisation of 2 instances crosses 70% then 3rd instance will be created. If 3 instances average cpu util crosses 70% , then 4th instance created and so on.
+
+If the average cpu util of 4 insatnces goes below 70%, then 4th instance will be terminated. Similarly if avg cpu util of 3 insatnces goes below 70% usage, then 3rd instance will be terminated.
+
+
+Trafic flow:
+
+Route 53 -> ALB -> listener -> Rule -> Traget group -> health check -> instance
+
+
+Rolling update:
+
+Assume we have 4 instances. Now a new version came in backend servers.
+
+Rolling update will be as follows
+
+Create a 1st new instance and once its healthy, delete one old instance
+
+Then create 2nd new instance and delete one more old instance
+
+Then create 3rd new instance and delete one more old instance and so on
+
+Amazon certificate manager (ACM):
+
+When the request comes from public, we need to use https for our domain name and not http.
+
+Usual process to make our domain as https is we need ssl/tls certificate. We have certian cert providers, we need to request them. 
+
+They provide some records and then we need add them to out domain in the domain provider such as hostinger/godaddy/route53.
+
+If we have domain from route 53, then amazon provides the certificate and then we can add the records in our domain.
+
+We did this using terraform in 75-acm directory
+
+
+
+
+
+
+
 
 
 
