@@ -76,6 +76,19 @@ module "app_alb_sg" {
     sg_tags = var.app_alb_sg_tags
 }
 
+module "web_alb_sg" {
+    #source = "../../03-terraform-sg-module"
+    # to give source from module prepared in GITHUB
+    source = "git::https://github.com/makkenagithub/03-terraform-sg-module.git?ref=main"
+
+    project_name = var.project_name
+    env = var.env
+    sg_name = "web-alb"  # expense-dev-web-alb
+    vpc_id  = local.vpc_id
+    common_tags = var.common_tags
+    sg_tags = var.web_alb_sg_tags
+}
+
 module "vpn_sg" {
     #source = "../../03-terraform-sg-module"
     # to give source from module prepared in GITHUB
@@ -88,6 +101,8 @@ module "vpn_sg" {
     common_tags = var.common_tags
     sg_tags = var.vpn_sg_tags
 }
+
+
 
 # mysql allowing connection on 3306 from instances attched to backed sg
 resource "aws_security_group_rule" "mysql_backend" {
@@ -394,4 +409,35 @@ resource "aws_security_group_rule" "backend_vpn_8080" {
   
   # security group to apply this rule to
   security_group_id = module.backend_sg.id
+}
+
+
+# web alb is accepting connection from port 443 from public
+resource "aws_security_group_rule" "web_alb_https_443" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]  
+  
+  # security group to apply this rule to
+  security_group_id = module.web_alb_sg.id
+}
+
+# web alb is accepting connection from port 80 from public
+resource "aws_security_group_rule" "web_alb_https_80" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  # accept connections from this source
+  #source_security_group_id = module.ansible_sg.id
+
+  cidr_blocks       = ["0.0.0.0/0"]  
+  
+  # security group to apply this rule to
+  security_group_id = module.web_alb_sg.id
 }
