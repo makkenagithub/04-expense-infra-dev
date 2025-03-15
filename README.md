@@ -178,7 +178,7 @@ Its not good to take AMI when the instance is running, because we may get lot of
 5. delete ec2 instance of step 1
 6. create launch templetae (it contains ami, network ,sg etc)
 7. create target group
-8. create ASG using launch template and place it in target group
+8. create ASG (auto scaling group) using launch template and place it in target group
 9. then create rule in load balancer.
 
 Ansible push: We have ansible server. We install packages in ansible nodes with the help of ansible server. 
@@ -202,5 +202,54 @@ So the resource is tainted. Then run terraform plan and apply, It creates the re
 When a resource is tainted , then terraform will rerun that resource. 
 
 Terraform creates the resources paralely which do not have dependency. To make some resource to create after a resource is created, then we have to depends on block in the resource.
+
+Terraform taint command is deprecated. Terraform recommends to use -replace command instead of taint
+
+```
+terraform apply -replace="aws_instance.example[0]"
+```
+
+The terraform taint command marks specified objects in the Terraform state as tainted. Use the terraform taint command when objects become degraded or damaged. Terraform prompts you to replace the tainted objects in the next plan you create.
+
+This command is deprecated. Instead, add the -replace option to your terraform apply command.
+
+Terraform target:
+
+When you apply changes to your Terraform projects, Terraform generates a plan that includes all of the differences between your configuration and 
+the resources currently managed by your project, if any. When you apply the plan, Terraform will add, remove, and modify resources as proposed by the plan.
+
+In a typical Terraform workflow, you apply the entire plan at once. Occasionally you may want to apply only part of a plan, 
+such as when Terraform's state has become out of sync with your resources due to a network failure, a problem with the upstream cloud platform, 
+or a bug in Terraform or its providers. To support this, Terraform lets you target specific resources when you plan, apply, or destroy your infrastructure. 
+Targeting individual resources can be useful for troubleshooting errors, but should not be part of your normal workflow.
+
+You can use Terraform's -target option to target specific resources, modules, or collections of resources. 
+
+```
+terraform plan -target="module.s3_bucket"
+terraform apply -target="random_pet.bucket_name"
+```
+
+
+To create/delete the resources 
+
+for i in 10-vpc 20-sg 30-baston-ec2 40-rds 50-app-alb 60-vpn 70-backend; do cd $i ; terraform apply -auto-approve ; cd .. ; done
+
+for i in 70-backend 60-vpn 50-app-alb 40-rds 30-baston-ec2 20-sg 10-vpc; do cd $i ; terraform destroy -auto-approve ; cd .. ; done
+
+Target Group:
+
+We need to give instances, target group name, protocol, port, health check protocol and path while creating target group.
+
+Auto scaling group (ASG):
+
+Input for auto scaling involves launch template, target group arn
+
+Auto scaling policy:
+
+Input is ASG name, scaling policy type (CPU utilisation etc)
+
+
+
 
 
