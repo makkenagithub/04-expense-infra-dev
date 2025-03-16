@@ -295,12 +295,21 @@ Content Delivery Network (CDN) - AWS Cloudfront:
 
 AWS has edge servers (cacheing) across the globe. To make the static content (movies, images etc) downloand faster to the end users.
 
-Origin -> where the original content exists
+Origin -> where the original content exists. It can be S3, API gateway or ALB, DNS etc
 
 Cache - static content
 
+Cache behaviour - how and what do you want to cache
 
+Price class: we can give all edge locations (i.e. across globe)
 
+Invalidation block : It means, to reload the content again from origin. FOr eg: if we update to new version, then all the existing cahe will be invalidated / deleted. And the cache will be needed to be reloaded from origin with latest content.
+Hence invalidation block can be used for that.
+When there is an update we can create invalidations so that edge location pull the content newly
+
+Dynamic content should not be cached. This policy/rule will be placed in Default cache behaviour
+
+Cloud front alternatives are Akamai, Cloudflare, imperva etc
 
 
 
