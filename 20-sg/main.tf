@@ -441,3 +441,50 @@ resource "aws_security_group_rule" "web_alb_https_80" {
   # security group to apply this rule to
   security_group_id = module.web_alb_sg.id
 }
+
+
+# frontend is accepting connection from vpn
+resource "aws_security_group_rule" "frontend_vpn" {
+  type              = "ingress"
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.vpn_sg.id
+
+  #cidr_blocks       = ["0.0.0.0/0"]  
+  
+  # security group to apply this rule to
+  security_group_id = module.frontend_sg.id
+}
+
+# frontend is accepting connection from web alb
+resource "aws_security_group_rule" "frontend_web_alb" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.web_alb_sg.id
+
+  #cidr_blocks       = ["0.0.0.0/0"]  
+  
+  # security group to apply this rule to
+  security_group_id = module.frontend_sg.id
+}
+
+# app alb is accepting connection from front end
+# load balancers always run on port 80
+resource "aws_security_group_rule" "app_alb_frontend" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  # accept connections from this source
+  source_security_group_id = module.frontend_sg.id
+
+  #cidr_blocks       = ["0.0.0.0/0"]  
+  
+  # security group to apply this rule to
+  security_group_id = module.app_alb_sg.id
+}
