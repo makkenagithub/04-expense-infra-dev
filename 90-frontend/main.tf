@@ -21,7 +21,7 @@ module "frontend_ec2" {
 
   tags = merge(
     var.common_tags,
-    var.frontend_tags
+    var.frontend_tags,
     {
         Name = local.resource_name
     }

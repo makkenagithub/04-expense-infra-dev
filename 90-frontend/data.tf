@@ -16,7 +16,7 @@ data "aws_ssm_parameter" "web_alb_listener_arn" {
 
 
 data "aws_ami" "suresh" {
-    most_recet = true
+    most_recent = true
     owners = ["973714476881"]
 
     filter {
