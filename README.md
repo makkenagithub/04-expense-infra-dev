@@ -286,7 +286,18 @@ If we have domain from route 53, then amazon provides the certificate and then w
 We did this using terraform in 75-acm directory
 
 
+WEB/APP/ANY LOAD BALANCERS ALWAYS RUN ON PORT 80. 
 
+This project is based on virtual machine (VM) based deployments. Means, we are using launch template AMI id and creating VMs in target groups.
+
+
+Content Delivery Network (CDN) - AWS Cloudfront:
+
+AWS has edge servers (cacheing) across the globe. To make the static content (movies, images etc) downloand faster to the end users.
+
+Origin -> where the original content exists
+
+Cache - static content
 
 
 
